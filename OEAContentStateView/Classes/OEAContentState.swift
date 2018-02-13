@@ -10,4 +10,5 @@ public enum OEAContentState {
     case none
     case empty
     case failed
+    case loading
 }

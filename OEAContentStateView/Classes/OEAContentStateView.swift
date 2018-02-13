@@ -44,6 +44,16 @@ public class OEAContentStateView : UIView {
 
 
 extension OEAContentStateView {
+    private func prepareForReuse() {
+        containerView?.removeConstraints(constraints)
+        subviews.map { subview in
+            subview.removeFromSuperview()
+        }
+        removeFromSuperview()
+        backgroundColor = .clear
+        translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private func updateLayout() {
         guard let containerView = self.containerView else {
             return
@@ -56,13 +66,27 @@ extension OEAContentStateView {
         bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
         trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
-    }
-    
-    private func prepareForReuse() {
-        containerView?.removeConstraints(constraints)
-        removeFromSuperview()
-        backgroundColor = .clear
-        translatesAutoresizingMaskIntoConstraints = false
+        
+        switch contentState {
+        case .none:
+            break
+        case .failed:
+            break
+        case .empty:
+            break
+        case .loading:
+            let loadingStateView = OEALoadingStateView()
+            loadingStateView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(loadingStateView)
+            loadingStateView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+            loadingStateView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+            loadingStateView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+            loadingStateView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+            
+            loadingStateView.setText("Loading...")
+            
+            break
+        }
     }
     
     private func updateTheme() {
